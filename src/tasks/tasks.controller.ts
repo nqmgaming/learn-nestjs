@@ -7,7 +7,8 @@ import {
   Patch,
   Post,
   Put,
-  Query, UseGuards,
+  Query,
+  UseGuards,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -16,6 +17,8 @@ import { GetTaskFilterDto } from './dto/get-task-filter.dto';
 import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
 import { TasksEntity } from './tasks.entity';
 import { AuthGuard } from '@nestjs/passport';
+import { UserEntity } from '../auth/user.entity';
+import { GetUser } from '../auth/get-user.decorator';
 
 @Controller('tasks')
 @UseGuards(AuthGuard())
@@ -23,43 +26,57 @@ export class TasksController {
   constructor(private tasksService: TasksService) {}
 
   @Get()
-  async getTasks(@Query() filterDto: GetTaskFilterDto): Promise<TasksEntity[]> {
+  async getTasks(
+    @Query() filterDto: GetTaskFilterDto,
+    @GetUser() user: UserEntity,
+  ): Promise<TasksEntity[]> {
     if (Object.keys(filterDto).length) {
-      return this.tasksService.getTasksWithFilters(filterDto);
+      return this.tasksService.getTasksWithFilters(filterDto, user);
     } else {
-      return this.tasksService.getAllTasks();
+      return this.tasksService.getAllTasks(user);
     }
   }
 
   @Get('/:id')
-  async getTaskById(@Param('id') id: string): Promise<TasksEntity> {
-    return this.tasksService.getTaskById(id);
+  async getTaskById(
+    @Param('id') id: string,
+    @GetUser() user: UserEntity,
+  ): Promise<TasksEntity> {
+    return this.tasksService.getTaskById(id, user);
   }
 
   @Post()
-  async createTask(@Body() createTaskDto: CreateTaskDto): Promise<TasksEntity> {
-    return this.tasksService.createTask(createTaskDto);
+  async createTask(
+    @Body() createTaskDto: CreateTaskDto,
+    @GetUser() user: UserEntity,
+  ): Promise<TasksEntity> {
+    return this.tasksService.createTask(createTaskDto, user);
   }
 
   @Put('/:id')
   async updateTask(
     @Param('id') id: string,
     @Body() updateTaskDto: UpdateTaskDto,
+    @GetUser() user: UserEntity,
   ): Promise<TasksEntity> {
-    return this.tasksService.updateTask(updateTaskDto);
+    return this.tasksService.updateTask(updateTaskDto, user);
   }
 
   @Patch('/:id/status')
   async updateTaskStatus(
     @Param('id') id: string,
     @Body() updateTaskStatusDto: UpdateTaskStatusDto,
+    @GetUser() user: UserEntity,
   ): Promise<TasksEntity> {
     const { status } = updateTaskStatusDto;
-    return this.tasksService.updateTaskStatus(id, status);
+    return this.tasksService.updateTaskStatus(id, status, user);
   }
 
   @Delete('/:id')
-  async deleteTask(@Param('id') id: string): Promise<void> {
-    return this.tasksService.deleteTask(id);
+  async deleteTask(
+    @Param('id') id: string,
+    @GetUser() user: UserEntity,
+  ): Promise<void> {
+    return this.tasksService.deleteTask(id, user);
   }
 }
