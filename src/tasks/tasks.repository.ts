@@ -2,7 +2,11 @@ import { DataSource, Repository } from 'typeorm';
 import { TasksEntity } from './tasks.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskStatus } from './task-status.enum';
-import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { GetTaskFilterDto } from './dto/get-task-filter.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 
@@ -20,7 +24,9 @@ export class TasksRepository extends Repository<TasksEntity> {
     }
   }
 
-  async getTasksWithFilters(filterDto: GetTaskFilterDto): Promise<TasksEntity[]> {
+  async getTasksWithFilters(
+    filterDto: GetTaskFilterDto,
+  ): Promise<TasksEntity[]> {
     const { status, search } = filterDto;
     const query = this.createQueryBuilder('task');
 
@@ -38,7 +44,9 @@ export class TasksRepository extends Repository<TasksEntity> {
     try {
       return await query.getMany();
     } catch (error) {
-      throw new InternalServerErrorException('Failed to retrieve tasks with filters');
+      throw new InternalServerErrorException(
+        'Failed to retrieve tasks with filters',
+      );
     }
   }
 
@@ -51,7 +59,7 @@ export class TasksRepository extends Repository<TasksEntity> {
     });
 
     try {
-      await this.insert(task);
+      await this.save(task);
       return task;
     } catch (error) {
       throw new InternalServerErrorException('Failed to create a new task');
