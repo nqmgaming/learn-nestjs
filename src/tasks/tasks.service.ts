@@ -33,22 +33,15 @@ export class TasksService {
     return await this.tasksRepository.createTask(createTaskDto);
   }
 
-  // async updateTask(updateTaskDto: UpdateTaskDto): Promise<TaskStatusEnum> {
-  //   const task = await this.getTaskById(updateTaskDto.id);
-  //   task.title = updateTaskDto.title;
-  //   task.description = updateTaskDto.description;
-  //   task.status = updateTaskDto.status;
-  //   return task;
-  // }
-  //
-  // async updateTaskStatus(id: string, status: TaskStatus): Promise<TaskStatusEnum> {
-  //   const task = await this.getTaskById(id);
-  //   task.status = status;
-  //   return task;
-  // }
-  //
-  // async deleteTask(id: string): Promise<void> {
-  //   const found = await this.getTaskById(id);
-  //   this.tasks = this.tasks.filter((task) => task.id !== found.id);
-  // }
+  async updateTask(updateTaskDto: UpdateTaskDto): Promise<TasksEntity> {
+    return await this.tasksRepository.updateTask(updateTaskDto);
+  }
+
+  async updateTaskStatus(id: string, status: TaskStatus): Promise<TasksEntity> {
+    return await this.tasksRepository.updateTaskStatus(id, status);
+  }
+
+  async deleteTask(id: string): Promise<void> {
+    await this.tasksRepository.deleteTask(id);
+  }
 }

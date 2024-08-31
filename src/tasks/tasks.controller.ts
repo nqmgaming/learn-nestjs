@@ -40,26 +40,25 @@ export class TasksController {
     return this.tasksService.createTask(createTaskDto);
   }
 
-  // @Put('/:id')
-  // async updateTask(
-  //   @Param('id') id: string,
-  //   @Body() updateTaskDto: UpdateTaskDto,
-  // ): Promise<TaskStatusEnum> {
-  //   updateTaskDto.id = id;
-  //   return this.tasksService.updateTask(updateTaskDto);
-  // }
-  //
-  // @Patch('/:id/status')
-  // async updateTaskStatus(
-  //   @Param('id') id: string,
-  //   @Body() updateTaskStatusDto: UpdateTaskStatusDto,
-  // ): Promise<TaskStatusEnum> {
-  //   const { status } = updateTaskStatusDto;
-  //   return this.tasksService.updateTaskStatus(id, status);
-  // }
-  //
-  // @Delete('/:id')
-  // async deleteTask(@Param('id') id: string): Promise<void> {
-  //   return this.tasksService.deleteTask(id);
-  // }
+  @Put('/:id')
+  async updateTask(
+    @Param('id') id: string,
+    @Body() updateTaskDto: UpdateTaskDto,
+  ): Promise<TasksEntity> {
+    return this.tasksService.updateTask(updateTaskDto);
+  }
+
+  @Patch('/:id/status')
+  async updateTaskStatus(
+    @Param('id') id: string,
+    @Body() updateTaskStatusDto: UpdateTaskStatusDto,
+  ): Promise<TasksEntity> {
+    const { status } = updateTaskStatusDto;
+    return this.tasksService.updateTaskStatus(id, status);
+  }
+
+  @Delete('/:id')
+  async deleteTask(@Param('id') id: string): Promise<void> {
+    return this.tasksService.deleteTask(id);
+  }
 }
