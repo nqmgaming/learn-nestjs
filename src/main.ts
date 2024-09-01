@@ -3,8 +3,10 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { TransformInterceptor } from './transform.interceptor';
+import {Logger} from '@nestjs/common';
 
 async function bootstrap() {
+  const logger = new Logger('bootstrap');
   const app = await NestFactory.create(AppModule);
   const config = new DocumentBuilder()
     .setTitle('Task Management')
@@ -19,7 +21,9 @@ async function bootstrap() {
   });
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new TransformInterceptor());
-  await app.listen(3000);
+  const port = process.env.PORT || 3000;
+  await app.listen(port);
+  logger.log(`Application is listening on port ${port}`);
 }
 
 bootstrap();
