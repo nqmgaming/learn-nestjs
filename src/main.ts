@@ -8,6 +8,7 @@ import {Logger} from '@nestjs/common';
 async function bootstrap() {
   const logger = new Logger('bootstrap');
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
   const config = new DocumentBuilder()
     .setTitle('Task Management')
     .setDescription('The Task Management API description')
